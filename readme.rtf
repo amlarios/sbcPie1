@@ -1,0 +1,19 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1561\cocoasubrtf200
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 Author: Alessio Larios\
+Title: D3.js Visualization of the Student Budget Committee's Allocations for the 2017-2018\
+\
+I use tabletop.js to retrieve data from the Wesleyan Student Assembly's "Published Group Funding" allocations Google sheet. The spreadsheet monitors how much each group is allocated every week to create a total sum, which is the only monetary amount this code is concerned with.\
+\
+I've modified the sheet such that each group is labeled with a category assigned by OrgSync. The categories are as follows: "Other", "Performance and Visual Arts", "Sports", "Identity", "Activism", "Independent Projects", "Program Houses/Greek", "Publications", and "Office of Community Service".\
+\
+I created a dataset based off each category and as tabletop.js parses the data, it checks which of these categories the group is, then adds the groups data to that category's dataset.\
+\
+When the HTML file loads, init runs and initializes tabletop parsing, which calls dollarValue. The dollarValue function converts strings with dollar values into ints (e.g. "$100.00" ==> int 100, "$10,000.00" ==> int 10000).\
+\
+Once all the datasets are complete, I use d3pie.js to create interactive pie charts for each of the categories.-->}

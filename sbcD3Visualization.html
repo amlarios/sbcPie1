@@ -1,0 +1,228 @@
+<!-- Author: Alessio Larios -->
+<!-- D3.js Visualization of the Student Budget Committee's
+		 allocations for the 2017-2018 -->
+<!-- I use tabletop.js to retrieve data from the Wesleyan Student Assembly's
+ 		 "Published Group Funding" allocations Google sheet. The spreadsheet
+		 monitors how much each group is allocated every week to create a total
+		 sum, which is the only monetary amount this code is concerned with.
+
+		 I've modified the sheet such that each group is labeled with a category
+		 assigned by OrgSync. The categories are as follows: "Other", "Performance
+		 and Visual Arts", "Sports", "Identity", "Activism", "Independent Projects",
+	 	 "Program Houses/Greek", "Publications", and "Office of Community Service".
+
+	   I created a dataset based off each category and as tabletop.js parses the
+		 data, it checks which of these categories the group is, then adds the
+		 groups data to that category's dataset.
+
+     When the HTML file loads, init runs and initializes tabletop parsing,
+		 which calls dollarValue. The dollarValue function converts strings with
+		 dollar values into ints (e.g. "$100.00" ==> int 100, "$10,000.00" ==>
+		 int 10000).
+
+		 Once all the datasets are complete, I use d3pie.js to create interactive
+		 pie charts for each of the categories.-->
+<html>
+<head></head>
+<body>
+
+<!-- These are the divs that will contain svg's for each pie chart. -->
+<div id="pieChart"></div>
+<div id="otherPieChart"></div>
+<div id="artPieChart"></div>
+<div id="sportsPieChart"></div>
+<div id="identityPieChart"></div>
+<div id="activismPieChart"></div>
+<div id="projPieChart"></div>
+<div id="greekPieChart"></div>
+<div id="pubPieChart"></div>
+<div id="servicePieChart"></div>
+
+<!-- Credit where credit is due!!! -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js'></script>
+<script src="d3pie.min.js"></script>
+<script>
+var publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/1WRwN5qHmV1EsjZQM5TMlR7R2osTbQUjjQgn8KtK_lb8/edit#gid=695473721';
+
+function init() {
+	Tabletop.init( { key: publicSpreadsheetUrl,
+									 callback: retrieveInfo,
+									 simpleSheet: true } )
+}
+
+// Create objects for each category type, containing a name, div, and dataset.
+var sbc = {id: "SBC", div:pieChart, Data: []} ;
+var other = {id: "Other", div:otherPieChart, Data: []} ;
+var art = {id: "Performance and Visual Arts", div:artPieChart, Data: []} ;
+var sports = {id: "Sports", div:sportsPieChart, Data: []} ;
+var identity = {id: "Identity", div:identityPieChart, Data: []} ;
+var activism = {id: "Activism", div:activismPieChart, Data: []} ;
+var proj = {id: "Independent Projects", div:projPieChart, Data: []} ;
+var greek = {id: "Program Houses/Greek", div:greekPieChart, Data: []} ;
+var pub = {id: "Publications", div:pubPieChart, Data: []} ;
+var service = {id: "Office of Community Services", div:servicePieChart, Data: []} ;
+
+function retrieveInfo(data, tabletop) {
+	console.log(data)
+	for (i = 0; i < data.length; i++) {
+		if (data[i].Total === "$0.00") { break; }
+		else if (data[i].Category === "Other"){
+			var ob = {};
+			other.Data.push({label : data[i].Group, category: data[i].Category, value: dollarValue(data[i].Total), color : "#"+((1<<24)*Math.random()|0).toString(16)});
+		}
+		else if (data[i].Category === "Performance & Visual Arts"){
+			var ob = {};
+			art.Data.push({label : data[i].Group, category: data[i].Category, value: dollarValue(data[i].Total), color : "#"+((1<<24)*Math.random()|0).toString(16)});
+		}
+		else if (data[i].Category === "Sports"){
+			var ob = {};
+			sports.Data.push({label : data[i].Group, category: data[i].Category, value: dollarValue(data[i].Total), color : "#"+((1<<24)*Math.random()|0).toString(16)});
+		}
+		else if (data[i].Category === "Identity"){
+			var ob = {};
+			identity.Data.push({label : data[i].Group, category: data[i].Category, value: dollarValue(data[i].Total), color : "#"+((1<<24)*Math.random()|0).toString(16)});
+		}
+		else if (data[i].Category === "Activism"){
+			var ob = {};
+			activism.Data.push({label : data[i].Group, category: data[i].Category, value: dollarValue(data[i].Total), color : "#"+((1<<24)*Math.random()|0).toString(16)});
+		}
+		else if (data[i].Category === "Independent Projects"){
+			var ob = {};
+			proj.Data.push({label : data[i].Group, category: data[i].Category, value: dollarValue(data[i].Total), color : "#"+((1<<24)*Math.random()|0).toString(16)});
+		}
+		else if (data[i].Category === "Program House/Greek"){
+			var ob = {};
+			greek.Data.push({label : data[i].Group, category: data[i].Category, value: dollarValue(data[i].Total), color : "#"+((1<<24)*Math.random()|0).toString(16)});
+		}
+		else if (data[i].Category === "Publications"){
+			var ob = {};
+			pub.Data.push({label : data[i].Group, category: data[i].Category, value: dollarValue(data[i].Total), color : "#"+((1<<24)*Math.random()|0).toString(16)});
+		}
+		else if (data[i].Category === "Office of Community Service")
+		{
+			var ob = {};
+			service.Data.push({label : data[i].Group, category: data[i].Category, value: dollarValue(data[i].Total), color : "#"+((1<<24)*Math.random()|0).toString(16)});
+		}
+		else {
+			var ob = {};
+			sbc.Data.push({label : data[i].Group, category: data[i].Category, value: dollarValue(data[i].Total), color : "#"+((1<<24)*Math.random()|0).toString(16)});
+		}
+	}
+	console.log(sbc)
+	console.log(other)
+	console.log(art)
+	console.log(sports)
+	console.log(identity)
+	console.log(activism)
+	console.log(proj)
+	console.log(greek)
+	console.log(pub)
+	console.log(service)
+	//createPie(sbc);
+	createPie(other);
+	createPie(art);
+	createPie(sports);
+	createPie(identity);
+	createPie(activism);
+	createPie(proj);
+	createPie(greek);
+	createPie(pub);
+	createPie(service);
+}
+
+// Takes a string such as "$75.50".
+function dollarValue(str) {
+	// Checks to see if the number in the string is greater than 999 and thus
+	// has a comma.
+	// If there's a comma, then the new string will remove "$" and "," and merge
+	// both parts of the string.
+	if (str.includes(",")) {
+		var comma = str.indexOf(",");
+		var newString = str.substr(1, comma-1)+str.substr(comma+1)
+	}
+	// If not, then the new string will merely remove "$".
+	else {
+		var newString = str.substr(1)
+	}
+	// Convert the new string into an integer and return that integer.
+	return parseInt(newString)
+}
+
+// Pulls attributes from the input data to configure the div, creating a pie
+// chart with a unique title from a unique dataset.
+function createPie(data) {
+
+	var pie = new d3pie(data.div, {
+		header: {
+			title: {
+				text: data.id,
+				fontSize: 24,
+				font: "open sans"
+				},
+			subtitle: {
+				text: "A full pie chart to show off label collision detection and resolution.",
+				color: "#999999",
+				fontSize: 12,
+				font: "open sans"
+				},
+			titleSubtitlePadding: 9
+		},
+		// Group names can be long, so it's important to make these svg's wide.
+		size: {
+			canvasHeight: 500,
+			canvasWidth: 675
+		},
+		data: {
+			content: data.Data
+		},
+		labels: {
+					outer: {
+								"pieDistance": 32
+					},
+					inner: {
+								"hideWhenLessThanPercentage": 3
+					},
+					mainLabel: {
+								"fontSize": 11
+					},
+					percentage: {
+								"color": "#ffffff",
+								"decimalPlaces": 0
+					},
+					value: {
+								"color": "#adadad",
+								"fontSize": 11
+					},
+					lines: {
+								"enabled": true
+					},
+					truncation: {
+								"enabled": true
+					}
+			},
+		// When a visitor hovers over a slice, the information is enlarged.
+		tooltips: {
+			enabled: true,
+			type: "placeholder",
+			string: "{label}: {percentage}%",
+			styles: {
+				fadeInSpeed: 500,
+				backgroundColor: "#B22222",
+				backgroundOpacity: 0.8,
+				color: "#000000",
+				borderRadius: 4,
+				font: "verdana",
+				fontSize: 20,
+				padding: 20
+			}
+		}
+	});
+}
+
+window.addEventListener('DOMContentLoaded', init)
+
+</script>
+</body>
+</html>
