@@ -22,9 +22,39 @@
 
 		 Once all the datasets are complete, I use d3pie.js to create interactive
 		 pie charts for each of the categories.-->
-<html>
-<head></head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="d3 visualization of SBC allocations.">
+	<meta name="author" content="Alessio Larios">
+	<meta property="og:image" content="wsaLogo1.jpg">
+	<meta property="og:description" content="d3 visualization of SBC allocations.">
+
+	<title>Visualization of Allocations</title>
+
+	<link rel="icon" href="https://static1.squarespace.com/static/5581f113e4b0b5914490f090/5581f50ae4b00d5e961fa24d/56a8e5b1ab281050a619df07/1468332517438/GJ27l5D5.png">
+
+	<link href="https://fonts.googleapis.com/css?family=Raleway:100" rel="stylesheet">
+</head>
 <body>
+
+<div id="header" style="width:window.innerWidth;">
+	<img src="http://static1.squarespace.com/static/5581f113e4b0b5914490f090/t/55cbe3ffe4b05e0d36629f31/1521642461923/?format=1500w" alt="WSA" style="width:300px;height:32px;">
+	<h1 align="center" style="font-family:'Raleway', sans-serif;">SBC Allocations</h1>
+	<div id="centered" style="margin: 0 auto; width:650px;">
+		<p align="center" style="text-align:center;font-family:'Raleway', sans-serif">
+			Using d3.js, d3pie.js, and tabletop.js, we have brought our allocations to
+			life. We've broken up allocations based on the organizational categories
+			used by OrgSync.
+		</p>
+	</div>
+</div>
+
+</br>
 
 <!-- These are the divs that will contain svg's for each pie chart. -->
 <div id="pieChart"></div>
@@ -53,73 +83,93 @@ function init() {
 }
 
 // Create objects for each category type, containing a name, div, and dataset.
-var sbc = {id: "SBC", div:pieChart, Data: []} ;
-var other = {id: "Other", div:otherPieChart, Data: []} ;
-var art = {id: "Performance and Visual Arts", div:artPieChart, Data: []} ;
-var sports = {id: "Sports", div:sportsPieChart, Data: []} ;
-var identity = {id: "Identity", div:identityPieChart, Data: []} ;
-var activism = {id: "Activism", div:activismPieChart, Data: []} ;
-var proj = {id: "Independent Projects", div:projPieChart, Data: []} ;
-var greek = {id: "Program Houses/Greek", div:greekPieChart, Data: []} ;
-var pub = {id: "Publications", div:pubPieChart, Data: []} ;
-var service = {id: "Office of Community Services", div:servicePieChart, Data: []} ;
+var sbc = {id: "SBC", div:pieChart, total:0, Data: []} ;
+var other = {id: "Other", div:otherPieChart, total:0, Data: []} ;
+var art = {id: "Performance and Visual Arts", div:artPieChart, total:0, Data: []} ;
+var sports = {id: "Sports", div:sportsPieChart, total:0, Data: []} ;
+var identity = {id: "Identity", div:identityPieChart, total:0, Data: []} ;
+var activism = {id: "Activism", div:activismPieChart, total:0, Data: []} ;
+var proj = {id: "Independent Projects", div:projPieChart, total:0, Data: []} ;
+var greek = {id: "Program Houses/Greek", div:greekPieChart, total:0, Data: []} ;
+var pub = {id: "Publications", div:pubPieChart, total:0, Data: []} ;
+var service = {id: "Office of Community Services", div:servicePieChart, total:0, Data: []} ;
 
 function retrieveInfo(data, tabletop) {
-	console.log(data)
 	for (i = 0; i < data.length; i++) {
 		if (data[i].Total === "$0.00") { break; }
 		else if (data[i].Category === "Other"){
 			var ob = {};
-			other.Data.push({label : data[i].Group, category: data[i].Category, value: dollarValue(data[i].Total), color : "#"+((1<<24)*Math.random()|0).toString(16)});
+			var dolVal = dollarValue(data[i].Total);
+			other.Data.push({label : data[i].Group, category: data[i].Category, value: dolVal, color : "#"+((1<<24)*Math.random()|0).toString(16)});
+			other.total += dolVal;
 		}
 		else if (data[i].Category === "Performance & Visual Arts"){
 			var ob = {};
-			art.Data.push({label : data[i].Group, category: data[i].Category, value: dollarValue(data[i].Total), color : "#"+((1<<24)*Math.random()|0).toString(16)});
+			var dolVal = dollarValue(data[i].Total);
+			art.Data.push({label : data[i].Group, category: data[i].Category, value: dolVal, color : "#"+((1<<24)*Math.random()|0).toString(16)});
+			art.total += dolVal;
 		}
 		else if (data[i].Category === "Sports"){
 			var ob = {};
-			sports.Data.push({label : data[i].Group, category: data[i].Category, value: dollarValue(data[i].Total), color : "#"+((1<<24)*Math.random()|0).toString(16)});
+			var dolVal = dollarValue(data[i].Total);
+			sports.Data.push({label : data[i].Group, category: data[i].Category, value: dolVal, color : "#"+((1<<24)*Math.random()|0).toString(16)});
+			sports.total += dolVal;
 		}
 		else if (data[i].Category === "Identity"){
 			var ob = {};
-			identity.Data.push({label : data[i].Group, category: data[i].Category, value: dollarValue(data[i].Total), color : "#"+((1<<24)*Math.random()|0).toString(16)});
+			var dolVal = dollarValue(data[i].Total);
+			identity.Data.push({label : data[i].Group, category: data[i].Category, value: dolVal, color : "#"+((1<<24)*Math.random()|0).toString(16)});
+			identity.total += dolVal;
 		}
 		else if (data[i].Category === "Activism"){
 			var ob = {};
-			activism.Data.push({label : data[i].Group, category: data[i].Category, value: dollarValue(data[i].Total), color : "#"+((1<<24)*Math.random()|0).toString(16)});
+			var dolVal = dollarValue(data[i].Total);
+			activism.Data.push({label : data[i].Group, category: data[i].Category, value: dolVal, color : "#"+((1<<24)*Math.random()|0).toString(16)});
+			activism.total += dolVal;
 		}
 		else if (data[i].Category === "Independent Projects"){
 			var ob = {};
-			proj.Data.push({label : data[i].Group, category: data[i].Category, value: dollarValue(data[i].Total), color : "#"+((1<<24)*Math.random()|0).toString(16)});
+			var dolVal = dollarValue(data[i].Total);
+			proj.Data.push({label : data[i].Group, category: data[i].Category, value: dolVal, color : "#"+((1<<24)*Math.random()|0).toString(16)});
+			proj.total += dolVal;
 		}
 		else if (data[i].Category === "Program House/Greek"){
 			var ob = {};
-			greek.Data.push({label : data[i].Group, category: data[i].Category, value: dollarValue(data[i].Total), color : "#"+((1<<24)*Math.random()|0).toString(16)});
+			var dolVal = dollarValue(data[i].Total);
+			greek.Data.push({label : data[i].Group, category: data[i].Category, value: dolVal, color : "#"+((1<<24)*Math.random()|0).toString(16)});
+			greek.total += dolVal;
 		}
 		else if (data[i].Category === "Publications"){
 			var ob = {};
-			pub.Data.push({label : data[i].Group, category: data[i].Category, value: dollarValue(data[i].Total), color : "#"+((1<<24)*Math.random()|0).toString(16)});
+			var dolVal = dollarValue(data[i].Total);
+			pub.Data.push({label : data[i].Group, category: data[i].Category, value: dolVal, color : "#"+((1<<24)*Math.random()|0).toString(16)});
+			pub.total += dolVal;
 		}
 		else if (data[i].Category === "Office of Community Service")
 		{
 			var ob = {};
-			service.Data.push({label : data[i].Group, category: data[i].Category, value: dollarValue(data[i].Total), color : "#"+((1<<24)*Math.random()|0).toString(16)});
+			var dolVal = dollarValue(data[i].Total);
+			service.Data.push({label : data[i].Group, category: data[i].Category, value: dolVal, color : "#"+((1<<24)*Math.random()|0).toString(16)});
+			service.total += dolVal;
 		}
 		else {
 			var ob = {};
-			sbc.Data.push({label : data[i].Group, category: data[i].Category, value: dollarValue(data[i].Total), color : "#"+((1<<24)*Math.random()|0).toString(16)});
+			var dolVal = dollarValue(data[i].Total);
+			sbc.Data.push({label : data[i].Group, category: data[i].Category, value: dolVal, color : "#"+((1<<24)*Math.random()|0).toString(16)});
 		}
 	}
-	console.log(sbc)
-	console.log(other)
-	console.log(art)
-	console.log(sports)
-	console.log(identity)
-	console.log(activism)
-	console.log(proj)
-	console.log(greek)
-	console.log(pub)
-	console.log(service)
+
+	// Convert the total funding for each category into a easier to read string.
+	other.total = dollarString(other.total);
+	art.total = dollarString(art.total);
+	sports.total = dollarString(sports.total);
+	identity.total = dollarString(identity.total);
+	activism.total = dollarString(activism.total);
+	proj.total = dollarString(proj.total);
+	greek.total = dollarString(greek.total);
+	pub.total = dollarString(pub.total);
+	service.total = dollarString(service.total);
+
 	//createPie(sbc);
 	createPie(other);
 	createPie(art);
@@ -150,6 +200,20 @@ function dollarValue(str) {
 	return parseInt(newString)
 }
 
+function dollarString(int) {
+	newString = String(int)
+	if (newString.length === 4) {
+		newString = newString[0]+","+newString.substring(1)
+	}
+	else if (newString.length === 5) {
+		newString = newString.substring(0,1)+","+newString.substring(2)
+	}
+	else if (newString.length === 6) {
+		newString = newString.substring(0,2)+","+newString.substring(3)
+	}
+	return "$"+newString
+}
+
 // Pulls attributes from the input data to configure the div, creating a pie
 // chart with a unique title from a unique dataset.
 function createPie(data) {
@@ -159,20 +223,20 @@ function createPie(data) {
 			title: {
 				text: data.id,
 				fontSize: 24,
-				font: "open sans"
+				font: "Raleway, sans-serif"
 				},
 			subtitle: {
-				text: "A full pie chart to show off label collision detection and resolution.",
+				text: "Total funding: "+data.total,
 				color: "#999999",
 				fontSize: 12,
-				font: "open sans"
+				font: "Raleway, sans-serif"
 				},
 			titleSubtitlePadding: 9
 		},
 		// Group names can be long, so it's important to make these svg's wide.
 		size: {
 			canvasHeight: 500,
-			canvasWidth: 675
+			canvasWidth: 630
 		},
 		data: {
 			content: data.Data
@@ -214,7 +278,7 @@ function createPie(data) {
 				color: "#000000",
 				borderRadius: 4,
 				font: "verdana",
-				fontSize: 20,
+				fontSize: 18,
 				padding: 20
 			}
 		}
