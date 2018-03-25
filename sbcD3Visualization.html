@@ -239,6 +239,10 @@ function createPie(data) {
 			canvasWidth: 630
 		},
 		data: {
+			smallSegmentGrouping: {
+					enabled: true,
+					value: 2,
+		},
 			content: data.Data
 		},
 		labels: {
@@ -274,11 +278,12 @@ function createPie(data) {
 			styles: {
 				fadeInSpeed: 500,
 				backgroundColor: "#B22222",
-				backgroundOpacity: 0.8,
+				backgroundOpacity: 0.95,
 				color: "#000000",
 				borderRadius: 4,
 				font: "verdana",
 				fontSize: 18,
+				fontSize: 15,
 				padding: 20
 			}
 		}
